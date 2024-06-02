@@ -43,9 +43,98 @@ for i=1:length(kd)
     R_PFR(:,i) = sqrt((2.*f.*kd(i).*I_PFR_Analytical(:,i))/kt(i));      % [mol/lit]
     M_PFR_Analytical(:,i) = Min.*exp(2.*kp(i)./kd(i).*sqrt(2.*f.*kd(i).*Iin./kt(i)).*(exp(-kd(i).*tau./2)-1));      % [mol/lit]
     X_PFR_Analytical(:,i) = 1-exp(2.*kp(i)./kd(i).*sqrt(2.*f.*kd(i).*Iin./kt(i)).*(exp(-kd(i).*tau./2)-1));      % [mol/lit]
+
+    % CSTR Analytical Solution - no dF
+    I_CSTR(:,i) = Iin./(1+kd(i).*tau);      % [mol/lit]
+    R_CSTR(:,i) = sqrt(2.*f.*kd(i).*I_CSTR(:,i)./kt(i));      % [mol/lit]
+    M_CSTR(:,i) = Min./(1+kp(i).*R_CSTR(:,i).*tau');      % [mol/lit]
+    X_CSTR(:,i) = 1-(1./(1+kp(i).*R_CSTR(:,i).*tau'));      % [mol/lit]
 end
 %% Figures
+figure(1)
+% M_PFR Analytical and numerical 
+subplot(1,2,1)
+plot(t,M_PFR_Analytical)
+hold on 
+set(gca,'ColorOrderIndex')
+plot(t,M_PFR_Numerical,'--','LineWidth',2)
+xlabel('Tau [s]'); ylabel('Concentration of Monomer [Mol/Lit]'); grid on
+legend('PE','PS','PMMA','PMA','PE_{Num}','PS_{Num}','PMMA_{Num}','PMA_{Num}')
 
+% X_PFR Analytical and numerical 
+subplot(1,2,2)
+plot(t,X_PFR_Analytical)
+hold on 
+set(gca,'ColorOrderIndex')
+plot(t,X_PFR_Numerical,'--','LineWidth',2)
+xlabel('Tau [s]'); ylabel('Conversion [-]'); grid on
+legend('PE','PS','PMMA','PMA','PE_{Num}','PS_{Num}','PMMA_{Num}','PMA_{Num}')
+
+
+figure(2) %Comparison I_CSTR and I_PFR_Numerical
+plot(t,I_PFR_Numerical)
+hold on
+set(gca,'ColorOrderIndex',1)
+plot(t,I_CSTR,'--','LineWidth',1)
+xlabel('Tau [s]'); ylabel('Concentration [mol/lit]'); grid on
+legend('PE_{PFR}','PS_{PFR}','PMMA_{PFR}','PMA_{PFR}','PE_{CSTR}','PS_{CSTR}','PMMA_{CSTR}','PMA_{CSTR}')
+
+figure(3) % Comparison M_CSTR and M_PFR
+plot(t,M_PFR_Numerical)
+hold on
+set(gca,'ColorOrderIndex',1)
+plot(t,M_CSTR,'--','LineWidth',1)
+xlabel('Tau [s]'); ylabel('Concentration [mol/lit]'); grid on
+legend('PE_{PFR}','PS_{PFR}','PMMA_{PFR}','PMA_{PFR}','PE_{CSTR}','PS_{CSTR}','PMMA_{CSTR}','PMA_{CSTR}')
+
+figure(4)
+plot(t,X_PFR_Numerical)
+hold on
+set(gca,'ColorOrderIndex',1)
+plot(t,X_CSTR,'--','LineWidth',1)
+xlabel('Time [s]'); ylabel('Conversion [-]'); grid on
+legend('PE_{PFR}','PS_{PFR}','PMMA_{PFR}','PMA_{PFR}','PE_{CSTR}','PS_{CSTR}','PMMA_{CSTR}','PMA_{CSTR}')
+
+%% Resolution for PMA in PFR and Series of CSTRs
+N_CSTR = 10;
+
+for j=1:N_CSTR
+    tau_CSTR_series(:,j) = tau./j; %[s]
+
+    I_CSTR_Series(:,j) = Iin./((1+kd(4).*tau_CSTR_series(:,j)).^(j));   %[mol/lit]
+    M_CSTR_Series(:,j) = Min./((1+kp(4).*tau_CSTR_series(:,j).*sqrt(2*f.*kd(4).*I_CSTR_Series(:,j)./kt(4))).^(j));  %[mol/lit]
+    X_CSTR_Series(:,j) = 1-1./((1+kp(4).*tau_CSTR_series(:,j).*sqrt(2*f.*kd(4).*I_CSTR_Series(:,j)./kt(4))).^(j));  %[-]
+    
+end
+
+%% Figures for PMA in PFR and Series of CSTRs
+cc = turbo(N_CSTR);
+figure(5)   % Comparison I
+for j=1:N_CSTR
+    plot(tau,I_CSTR_Series(:,j),'Color',cc(j,:))
+    hold on
+    legendinfo1{j} = strcat(['Reactor Number ' num2str(j)]);
+end
+xlabel('Tau [s]'); ylabel('Concentration [mol/lit]');title('Initiator') ;grid on
+legend(legendinfo1,'Location','best')
+
+figure(6)   % Comparison M
+for j=1:N_CSTR
+    plot(tau,M_CSTR_Series(:,j),'Color',cc(j,:))
+    hold on
+    legendinfo1{j} = strcat(['Reactor Number ' num2str(j)]);
+end
+xlabel('Tau [s]'); ylabel('Concentration [mol/lit]');title('Monomer') ;grid on
+legend(legendinfo1,'Location','best')
+
+figure(7)   % Comparison X
+for j=1:N_CSTR
+    plot(tau,X_CSTR_Series(:,j),'Color',cc(j,:))
+    hold on
+    legendinfo1{j} = strcat(['Reactor Number ' num2str(j)]);
+end
+xlabel('Tau [s]'); ylabel('Conversion [-]');title('Conversion') ;grid on
+legend(legendinfo1,'Location','best')
 %% Function
 
 function dF = PFR(t,C,f,kd,kp,kt)
