@@ -61,7 +61,7 @@ end
 legend(legendinfo1)
 xlabel('time [hr]'); ylabel('Concentration [mol/Lit]'); grid on
 
-
+% Lambda Plots
 figure(2)
 subplot(1,2,1)
 plot(t,lambda0)
