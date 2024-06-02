@@ -1,7 +1,7 @@
 close all, clear all, clc
 global k11 k1p kpp K_11 K_1p K_pp T Pre N y_H2O k_a
 % Data
-Meg = 18; %[gr/mol] - 
+Meg = 18; %[gr/mol] - Water Molecular Weight
 Mru =  72; %[gr/mol] - Molecular weight of Repeating Unit
 P0_LA = 1; %[mol/lit] - Lactic Acid Concentration
 W0 = 0.1; %[mol/lit] - Water Concentration
