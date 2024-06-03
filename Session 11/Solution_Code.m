@@ -45,3 +45,19 @@ dM = -M./(1-X);
 dF = [dI dM]';
 end
 %% Function 2 --- No Diffusion Case
+function dF = Batch_NoDiffusion(X,C,f,kd,kp0,kt0,Cfm_ND)
+% Unknowns 
+I = C(1);
+M = C(2);
+
+% Kinetics Constants
+kp = kp0;           % [lit/mol/s]
+kfm = kp.*Cfm_ND;   % [lit/mol/s]
+kt = kt0;           % [lit/mol/s]
+
+% Mass Balance
+dI = -(kd.*I)./((kp+kfm).*(1-X).*sqrt(2.*f.*kd.*I./kt));
+dM = -M./(1-X);
+
+dF = [dI dM]';
+end
