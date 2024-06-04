@@ -82,7 +82,8 @@ for i=1:length(X_target)
 
     % Moments 
     mu_1(:,i) = 1./(gamma(:,i)+beta(:,i)./2);       % alpha << 1
-    mu_2(:,i) = (2.*(gamma(:,i)+3.*beta(:,i))./(alpha(:,i).^(2).*gamma(:,i)+0.5.*beta(:,i)));
+    % mu_2(:,i) = (2.*(gamma(:,i)+3.*beta(:,i))./(alpha(:,i).^(2).*gamma(:,i)+0.5.*beta(:,i)));
+    mu_2(:,i) = (2*gamma(:,i)+3*beta(:,i))./(alpha(:,i).^(2).*(gamma(:,i)+0.5*beta(:,i)));
 
     % Instantaneous number and length CLD
     xn_inst(:,i) = (alpha(:,i)./(1+alpha(:,i)).^(n)).*((gamma(:,i)...
@@ -119,7 +120,9 @@ for i=1:length(X_target)
 
     % Moments 
     mu_1_ND(:,i) = 1./(gamma_ND(:,i)+beta_ND(:,i)./2);       % alpha << 1
-    mu_2_ND(:,i) = (2.*(gamma_ND(:,i)+3.*beta_ND(:,i))./(alpha_ND(:,i).^(2).*gamma_ND(:,i)+0.5.*beta_ND(:,i)));
+    % mu_2_ND(:,i) = (2.*(gamma_ND(:,i)+3.*beta_ND(:,i))./(alpha_ND(:,i).^(2).*gamma_ND(:,i)+0.5.*beta_ND(:,i)));
+    mu_2_ND(:,i) = (2.*gamma_ND(:,i)+3.*beta_ND(:,i))./(alpha_ND(:,i).^(2).*(gamma_ND(:,i)+0.5*beta_ND(:,i)));
+
 
     % Instantaneous number and length CLD
     xn_inst_ND(:,i) = (alpha_ND(:,i)./(1+alpha_ND(:,i)).^(n)).*((gamma_ND(:,i)...
@@ -136,6 +139,105 @@ for i=1:length(X_target)
 
 end
 %% Figures --- All Cases
+figure(1)
+subplot(1,4,1)
+hold on 
+plot(n,xn_inst,'linewidth',2); 
+xlabel('Chain length n [-]')
+ylabel('xn Inst [-]')
+title('xn Inst')
+leg1 = legend( 'X =0.1', 'X =0.4', 'X =0.7', 'X =0.9');
+
+subplot(1,4,2)
+hold on 
+plot(n,xw_inst,'linewidth',2); 
+xlabel('Chain length n [-]')
+ylabel('xw Inst [-]')
+title('xw Inst')
+leg1 = legend( 'X =0.1', 'X =0.4', 'X =0.7', 'X =0.9');
+
+subplot(1,4,3)
+hold on 
+plot(n,xn_inst_ND,'linewidth',2); 
+xlabel('Chain length n [-]')
+ylabel('xn Inst ND [-]')
+title('xn Inst ND')
+leg1 = legend( 'X =0.1', 'X =0.4', 'X =0.7', 'X =0.9');
+
+subplot(1,4,4)
+hold on 
+plot(n,xw_inst_ND,'linewidth',2); 
+xlabel('Chain length n [-]')
+ylabel('xw Inst ND [-]')
+title('xw Inst ND')
+leg1 = legend( 'X =0.1', 'X =0.4', 'X =0.7', 'X =0.9');
+
+figure(2) 
+
+subplot(1,4,1)
+hold on 
+plot(X_target, DPn_inst, 'b--o','Linestyle','--','linewidth',2); % b (blue) / o (marker), it could be *
+xlabel('Conversion [-]') 
+ylabel('DPn Inst [-]') 
+title('DPn Inst') 
+leg1 = legend('DPn Inst');
+
+subplot(1,4,2)
+hold on 
+plot(X_target, DPw_inst,'r--o','Linestyle','--','linewidth',2); 
+xlabel('Conversion [-]') 
+ylabel('DPw Inst [-]') 
+title('DPw Inst') 
+leg1 = legend('DPw Inst');
+
+subplot(1,4,3)
+hold on 
+plot(X_target, DPn_inst_ND, 'b--o','Linestyle','--','linewidth',2); % b (blue) / o (marker), it could be *
+xlabel('Conversion [-]') 
+ylabel('DPn Inst ND[-]') 
+title('DPn Inst ND') 
+leg1 = legend('DPn Inst ND');
+
+subplot(1,4,4)
+hold on 
+plot(X_target, DPw_inst_ND,'r--o','Linestyle','--','linewidth',2); 
+xlabel('Conversion [-]') 
+ylabel('DPw Inst ND [-]') 
+title('DPw Inst ND')
+leg1 = legend('DPw Inst ND');
+
+figure(3)
+subplot(1,4,1)
+hold on 
+plot(X_target, Mn_av_inst,'b--o','Linestyle','--','linewidth',2);
+xlabel('Conversion [-]') 
+ylabel('Mn Av Inst [g/mol]') 
+title('Mn Av Inst')
+leg1 = legend('Mn Inst');
+
+subplot(1,4,2)
+hold on 
+plot(X_target, Mw_av_inst,'r--o','Linestyle','--','linewidth',2);
+xlabel('Conversion [-]') 
+ylabel('Mw Av Inst [g/mol]') 
+title('Mw Av Inst')
+leg1 = legend('Mw Inst');
+
+subplot(1,4,3)
+hold on 
+plot(X_target, Mn_av_inst_ND,'b--o','Linestyle','--','linewidth',2);
+xlabel('Conversion [-]') 
+ylabel('Mn Av Inst ND [g/mol]') 
+title('Mn Av Inst ND')
+leg1 = legend('Mn Inst ND');
+
+subplot(1,4,4)
+hold on 
+plot(X_target, Mw_av_inst_ND,'r--o','Linestyle','--','linewidth',2);
+xlabel('Conversion [-]') 
+ylabel('Mw Av Inst ND [g/mol]') 
+title('Mw Av Inst ND')
+leg1 = legend('Mw Inst ND');
 
 
 %% Function 1 --- Diffusion Case
