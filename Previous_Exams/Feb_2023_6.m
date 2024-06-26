@@ -9,9 +9,6 @@ X0    = 0;
 MW_M  = 120;     % [g/mol], molecular weight monomer
 MW_S  = 85;      % [g/mol], molecular weight solvent
 MW_I  = 270;     % [g/mol], molecular weight initiator
-% The dinsity values hasn't give in the problem data!
-rho_M = 940;     % [g/L], monomer density
-rho_S = 880;     % [g/L], solvent density
 f     = 0.5;     % [-]
 kd    = 4e-6; % [s-1]
 kp0   = 700;     % [L/mol/s]
@@ -23,7 +20,7 @@ CRD   = 180;     % [-]
 
 %% Resolution
 mM0 = M0*V0*MW_M;
-mS0 = (V0-mM0/rho_M)*rho_S;
+mS0 = S0*V0*MW_S;
 mI0 = I0*MW_I;
 
 Cfm = 0.01;
@@ -41,8 +38,8 @@ X = C(:,4);
 % Mass Calculations
 mS = S.*MW_S.*V0;
 mM = M0.*(1-X).*MW_M.*V0;
-mP = mM0-mM;
-wP = M0./(mP+mS+mM);
+mP = mM0-mM +mS0 - mS;
+wP = mP./(mP+mS+mM);
 
 % Kinetic Constants
 kp = (1/kp0+exp(Cn*wP)./kpD0).^(-1);
@@ -126,7 +123,7 @@ Ratio = Mw_inst_av(end)/Mw_inst_av_ND(end);
 disp(['The value of "R" equals to: ', num2str(Ratio)])
 
 %% Function 1 - With Diffusion
-function dF = Batch_Diffusion(t,C,f,kd,V0,M0,MW_M,mM0,MW_S,S0,kp0,kt0,kpD0,ktD0,Cn,Cfm,Cfs,CRD)
+function dF = Batch_Diffusion(t,C,f,kd,V0,M0,MW_M,mM0,mS0,MW_S,kp0,kt0,kpD0,ktD0,Cn,Cfm,Cfs,CRD)
 % Unknowns
 
 I = C(1);
@@ -137,8 +134,8 @@ X = C(4);
 % Preliminar Calculations
 % Calculations
 mM   = M0.*(1-X).*MW_M.*V0;     %[g], concentrazione*volume*peso molecolare=massa, concentrazione moltiplicata per (1-X) perchè non valutiamo le condizioni iniziali                
-mS   = S0.*(1-X).*MW_S.*V0;     %[g]
-mP   = mM0-mM;                  %[g], il polimero viene prodotto e all'inizio è 0 quindi la sua massa sarà la differenza tra la quantità di monomero iniziale e attuale
+mS   = S.*MW_S.*V0;     %[g]
+mP   = mM0-mM +mS0 - mS;                  %[g], il polimero viene prodotto e all'inizio è 0 quindi la sua massa sarà la differenza tra la quantità di monomero iniziale e attuale
 wP   = mP./(mP+mS+mM);          %[-], frazione massiva NO mI
 
 % Kinetic Constants
