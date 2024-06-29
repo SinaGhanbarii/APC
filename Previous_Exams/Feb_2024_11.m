@@ -126,6 +126,7 @@ mM = M0.*(1-X).*MW_M.*V0;
 mP = mM0 - mM;          % [gr]
 wP = mP./(mP+mS0+mM);   % [-]
 % Kinetics Constants 
+% Glass Effect
 kp = (1/kp0+exp(Cn.*wP)./kpD0).^(-1);   % [lit/mol/s]
 kt = ((1/kt0+exp(Cn.*wP)./ktD0).^(-1))+CRD*kp.*(1-wP);
 kfm = kp.*Cfm;  % [lit/mol/s]
