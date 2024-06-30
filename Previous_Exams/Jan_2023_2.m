@@ -17,13 +17,14 @@ deltaVp = -11.7e-3;
 kd1 = 2e-4; % [s-1]
 kd2 = 2*kd1;
 kp = Ap*exp(-((Ep + deltaVp*P*10^-6)/8.314/T)); % [L/mol/s]
-kt = 5e15; % [L/mol/s]
+kt1 = 5e15; % [L/mol/s]
+kt2 = kt1/2;
 
 tau =0.5; % [s]
-j=4;
+j=4;        % Number of CSTRs
 tau_CSTR = tau./j;
-X_CSTR_a = 1-1./((1+kp.*tau_CSTR.*sqrt(2*f.*kd1.*I0./kt)).^(j));
-X_CSTR_b = 1-1./((1+kp.*tau_CSTR.*sqrt(2*f.*kd2.*I0./kt)).^(j));
+X_CSTR_a = 1-1./((1+kp.*tau_CSTR.*sqrt(2*f.*kd1.*I0./kt1)).^(j));
+X_CSTR_b = 1-1./((1+kp.*tau_CSTR.*sqrt(2*f.*kd2.*I0./kt2)).^(j));
 
 
 R = X_CSTR_b/X_CSTR_a;
