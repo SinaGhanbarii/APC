@@ -1,4 +1,4 @@
-clear, close, clc
+clearvars, close, clc
 % JUST CHANGE ALPHA!
 alpha = 7;
 
